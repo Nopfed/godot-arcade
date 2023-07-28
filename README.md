@@ -1,6 +1,8 @@
 # Godot Arcade
-Godot renderer built on arweave using arweavekit for the 2023 arweave community hackathon.
+Godot renderer built on arweave using ArweaveKit for the 2023 arweave community hackathon.
 
+
+## Description
 The idea is to get Godot games stored onto and runnable from Arweave in the browser.
 
 

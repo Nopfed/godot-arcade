@@ -1,5 +1,5 @@
 # Godot Arcade
-Godot renderer built on arweave using ArweaveKit for the 2023 arweave community hackathon.
+Godot renderer built on arweave using ArweaveKit for the 2023 Arweave Community Hackathon.
 
 
 ## Description

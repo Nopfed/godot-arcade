@@ -1,5 +1,27 @@
 {
   "dependencies": {
     "arweavekit": "^1.4.6"
-  }
+  },
+  "name": "godot-arcade",
+  "description": "Godot renderer built on arweave using ArweaveKit for the 2023 Arweave Community Hackathon.",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nopfed/godot-arcade.git"
+  },
+  "keywords": [
+    "hackathon",
+    "arweave"
+  ],
+  "author": "nopfed",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Nopfed/godot-arcade/issues"
+  },
+  "homepage": "https://github.com/Nopfed/godot-arcade#readme"
 }

@@ -1,7 +1,12 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
-  // modules: [
-  //   'nuxt-custom-headers',
-  // ]
+  ssr: false,
+  css: [
+    'vuetify/lib/styles/main.sass'
+  ],
+  build: {
+    transpile: ['vuetify'],
+  },
+  pages: true
 })

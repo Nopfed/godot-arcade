@@ -1,11 +1,10 @@
-<script setup lang="ts">
-// export default {
-//   name: 'GodotArcade',
-//   httpHeaders: () => ({
-//     'Cross-Origin-Resource-Policy: same-site'
-//   })
-// }
-</script>
-
 <template>
-</template>
+    <NuxtLayout>
+      <NuxtPage/>
+    </NuxtLayout>
+  </template>
+<script setup lang="ts">
+useHead({
+title: 'Godot Arcade'
+})
+</script>

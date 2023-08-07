@@ -4,9 +4,15 @@
             <v-row>
                 <v-col cols="12">
                     <h1>{{ game.title }}</h1>
-                    <code>{{ game.tx.id }}</code>
-                    <p>By: {{ game.tx.owner.address }}</p>
-                    <code>{{ game.manifestId }}</code>
+                    <code>Bundle ID: {{ game.tx.id }}</code>
+                    <p>
+                        Made By: 
+                        <NuxtLink :to="`/creator/${game.tx.owner.address}`">
+                            {{ game.tx.owner.address }}
+                        </NuxtLink>
+                    </p>
+                    <code>Game ID: {{ game.manifestId }}</code>
+                    
                 </v-col>
             </v-row>
             <v-row v-if="game.manifestTx">
@@ -19,6 +25,12 @@
             <v-row v-else>
                 <v-col cols="12">
                     <h1>Game still unbundling, please hold.</h1>
+                    <v-btn @click="refresh" color="primary">Refresh</v-btn>
+                </v-col>
+            </v-row>
+            <v-row >
+                <v-col cols="12">
+                    <v-btn to="../" color="primary">Back to Games</v-btn>
                 </v-col>
             </v-row>
         </template>
@@ -39,6 +51,7 @@ import ArdbTransaction from 'ardb/lib/models/transaction'
 const ardb = useArdb()
 const route = useRoute()
 const arweave = useArweave()
+const config = useRuntimeConfig()
 
 const {api: {host, port, protocol}} = arweave.getConfig()
 const gateway = `${protocol}://${host}:${port}`
@@ -59,9 +72,12 @@ const {
         const title = tx.tags.find(t => t.name === 'Title')?.value || 'Untitled Game'
         const description = tx.tags.find(t => t.name === 'Description')?.value
         const manifestId = tx.tags.find(t => t.name === 'Manifest-ID')?.value
+        const license = tx.tags.find(t => t.name === 'License')?.value
+        const isUdl = config.public.UDLTxID === license
         console.log('ManifestId', manifestId)
+        if (!manifestId) {return null}
         const manifestTxs = await ardb.search('transactions')
-            .id(route.params.id.toString())
+            .id(manifestId)
             .limit(1)
             .sort("HEIGHT_DESC")
             .find() as ArdbTransaction[]
@@ -69,8 +85,8 @@ const {
         const manifestTx = manifestTxs[0]
         
 
-        return {tx, title, description, manifestId, manifestTx}
-        //return {...tx,title}
+        return {tx, title, description, manifestId, manifestTx, license, isUdl}
+
     } catch (error) {
         console.error("Error fetching transaction.", error)
     }

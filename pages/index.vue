@@ -2,17 +2,27 @@
     <v-container>
         <v-row>
             <v-col cols="12">
-                <h1>Godot Arcade</h1>
+                <h1 class="text-red-darken-4 text-center">Godot Arcade</h1>
+            </v-col>
+        </v-row>
+        
+        <v-row v-if="data">
+            <v-col v-for="{tx, title} in data" :key="tx.id" cols="12">
+                <NuxtLink :to="`/game/${tx.id}`">{{ title }}</NuxtLink> 
+                by 
+                <NuxtLink :to="`/creator/${tx.owner.address}`">
+                    {{ tx.owner.address }}
+                </NuxtLink>
+            </v-col>
+        </v-row>
+        <v-row>
+            <v-col cols="12">
+                
             </v-col>
         </v-row>
         <v-row>
             <v-col cols="12">
                 <v-btn color="primary" to="publish">Publish Game</v-btn>
-            </v-col>
-        </v-row>
-        <v-row v-if="data">
-            <v-col v-for="{tx, title} in data" :key="tx.id" cols="12">
-                <NuxtLink :to="`/game/${tx.id}`">{{ title }}</NuxtLink> by {{ tx.owner.address }}
             </v-col>
         </v-row>
     </v-container>
@@ -43,3 +53,7 @@ const {
 })
 
 </script>
+
+<style scoped>
+
+</style>

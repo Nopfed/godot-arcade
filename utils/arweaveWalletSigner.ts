@@ -1,6 +1,6 @@
 import Arweave from 'arweave'
-import { Signer } from 'arbundles/src/signing'
-import { SignatureConfig, SIG_CONFIG } from 'arbundles/src/constants'
+import { Signer } from 'arbundles'
+import { SignatureConfig, SIG_CONFIG } from 'arbundles'
 import { Buffer } from 'buffer'
 
 export default class ArweaveWalletSigner implements Signer {
@@ -16,7 +16,7 @@ export default class ArweaveWalletSigner implements Signer {
   async sign(message: Uint8Array): Promise<Uint8Array> {
     const signature = await window.arweaveWallet.signature(message, {
       name: "RSA-PSS",
-      saltLength: 0,
+      saltLength: 32,
     })
 
     return Buffer.from(signature)

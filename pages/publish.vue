@@ -8,7 +8,7 @@
         <v-row>
             <v-col cols="12">
                 <code v-if="walletAddress">
-                    Your wallet address: {{ walletAddress }}
+                    Welcome, {{ walletAddress }}
                 </code>
                 <v-btn v-else @click="connect">
                     Connect Arconnect Wallet
@@ -17,43 +17,57 @@
         </v-row>
         <v-row v-if="walletAddress">
             <v-col cols="12">
-                <v-form>
+                <v-form :disabled="loading">
                     <v-text-field hint="My Awesome Godot Game" counter="150" label="Game Title" v-model="gameTitle" />
                     <v-textarea hint="A cool game about cats." counter="300" label="Game Description" v-model="gameDescription"/>
                     <v-file-input label="Game Files" multiple v-model="filesToUpload" />
-                    <v-btn @click="uploadFiles">Upload Files</v-btn>
+                    <v-switch label="Use Universal Data License" v-model="useUdl"/>
+                    <a target="_blank" href="https://arwiki.wiki/#/en/Universal-Data-License-How-to-use-it">
+                        What is the Universal Data License?
+                    </a>
+                    <br/><br/>
+                    <v-btn :loading="loading" @click="uploadFiles">Upload Files</v-btn>
                 </v-form>
             </v-col>
         </v-row>
-        
+        <v-row >
+            <v-col cols="12">
+                <v-btn to="../" color="primary">Back to Games</v-btn>
+            </v-col>
+        </v-row>
         
     </v-container>
 </template>
 
 <script setup lang="ts">
 import { ArconnectSigner, DataItem, createData, bundleAndSignData } from 'arbundles';
-// import BundleFactory from '~/utils/bundle';
-// import DataItemFactory from '~/utils/dataItem';
-// import ArweaveWalletSigner from '~/utils/arweaveWalletSigner';
+import BundleFactory from '~/utils/bundle';
+import DataItemFactory from '~/utils/dataItem';
+import ArweaveWalletSigner from '~/utils/arweaveWalletSigner';
+import { useDefaults } from 'vuetify/lib/framework.mjs';
 
 const arweave = useArweave() // init arweave env
 const wallet = useArconnectProvider() // init wallet
+const config = useRuntimeConfig()
 
 const walletAddress = ref<string | null>(null)
 const filesToUpload = ref<File[]>([])
 const gameTitle = ref<string | null>(null)
 const gameDescription = ref<string | null>(null)
+const loading =  ref<boolean>(false)
+const useUdl = ref<boolean>(true)
 
 // prep and upload files
 
 const uploadFiles = async () => {
     try {
         if (!wallet.publicKey) {throw new Error('Wallet not connected.')}
+        loading.value = true
 
         const dataItems: DataItem[] = []
-        //const signer = new ArweaveWalletSigner(wallet.publicKey)
-        const signer = new ArconnectSigner(window.arweaveWallet)
-        await signer.setPublicKey()
+        const signer = new ArweaveWalletSigner(wallet.publicKey)
+        // const signer = new ArconnectSigner(window.arweaveWallet)
+        // await signer.setPublicKey()
 
         // get data from files that are being uploaded and sign them
 
@@ -68,17 +82,22 @@ const uploadFiles = async () => {
         for (const file of filesToUpload.value) {
             console.log('file', file.name, file.size, file.type)
             const data = await readFileAsArrayBufferAsync(file)
-            // const dataItem = await DataItemFactory.create(new Uint8Array(data), signer, 
-            //     [{
+            const tags: { name: string, value: string }[] = []
+            if (file.type) {
+                tags.push({ name: 'Content-Type', value: file.type })
+            }
+            const dataItem = await DataItemFactory.create(
+                new Uint8Array(data),
+                signer, 
+                tags
+            )
+            // const dataItem = createData(new Uint8Array(data), signer, {
+            //     tags:[{
             //         name: 'Content-Type',
             //         value: file.type}]
-            // )
-            const dataItem = createData(new Uint8Array(data), signer, {
-                tags:[{
-                    name: 'Content-Type',
-                    value: file.type}]
-            })
-            await dataItem.sign(signer)
+            // })
+            // await dataItem.sign(signer)
+
             console.log('ID', dataItem.id)
             dataItems.push(dataItem)
             const filename = encodeURIComponent(file.name)
@@ -100,25 +119,25 @@ const uploadFiles = async () => {
         if (gameDescription.value) {
             manifestTags.push({name: 'Description', value: gameDescription.value})
         }
-        // const manifestDataItem = await DataItemFactory.create(
-        //     JSON.stringify(manifest), 
-        //     signer, 
-        //     manifestTags    
-        // )
-        const manifestDataItem = await createData(
+        const manifestDataItem = await DataItemFactory.create(
             JSON.stringify(manifest), 
-            signer,
-            {tags: manifestTags}
+            signer, 
+            manifestTags    
         )
+        // const manifestDataItem = await createData(
+        //     JSON.stringify(manifest), 
+        //     signer,
+        //     {tags: manifestTags}
+        // )
         console.log('Manifest ID', manifestDataItem.id)
         dataItems.push(manifestDataItem)
 
         // make bundle
 
-        // const bundle = BundleFactory.create(dataItems)
-        const bundle = await bundleAndSignData(dataItems, signer)
-        const verified = await bundle.verify()
-        console.log('Bundle verification.', verified)
+        const bundle = BundleFactory.create(dataItems)
+        // const bundle = await bundleAndSignData(dataItems, signer)
+        // const verified = await bundle.verify()
+        // console.log('Bundle verification.', verified)
 
         // make transaction
 
@@ -135,15 +154,21 @@ const uploadFiles = async () => {
         if (gameDescription.value) {
             tx.addTag('Description', gameDescription.value)
         }
+        if (useUdl.value) {
+            tx.addTag('License', config.public.UDLTxID)
+        }
 
-        // await arweave.transactions.sign(tx)
-        // console.log('Posting Transaction', tx.id)
-        // await arweave.transactions.post(tx)
-        // console.log('Finished posting.')
+        await arweave.transactions.sign(tx)
+        console.log('Posting Transaction', tx.id)
+        await arweave.transactions.post(tx)
+        console.log('Finished posting.')
+
+        navigateTo(`game/${tx.id}`)
 
     } catch(error){
         console.error('Error while uploading.', error)
     }
+    loading.value = false
 }
 
 

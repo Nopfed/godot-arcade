@@ -6,7 +6,7 @@ export default defineNuxtConfig({
   ssr: false,
   css: [
     'vuetify/lib/styles/main.sass',
-    '@mdi/font/css/materialdesignicons.min.css'
+    '@mdi/font/css/materialdesignicons.min.css',
   ],
   build: {
     transpile: ['vuetify'],
@@ -50,5 +50,10 @@ export default defineNuxtConfig({
       },
       protocolImports: true,
     })]
+  },
+  runtimeConfig: {
+    public: {
+      UDLTxID: 'yRj4a5KMctX_uOmKWCFJIjmY8DeJcusVk6-HzLiM_t8'
+    }
   }
 })

@@ -1,7 +1,7 @@
 import Arweave from 'arweave'
 import { createData, DataItem } from 'arbundles'
-import { Signer } from 'arbundles/src/signing'
-import { getSignatureData } from 'arbundles/src/ar-data-base'
+import { Signer } from 'arbundles'
+import getSignatureData from 'arbundles/build/web/esm/src/ar-data-base'
 
 export default class DataItemFactory {
   static async create(

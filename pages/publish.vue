@@ -22,6 +22,9 @@
                     <v-textarea hint="A cool game about cats." counter="300" label="Game Description" v-model="gameDescription"/>
                     <v-file-input label="Game Files" multiple v-model="filesToUpload" />
                     <v-switch color="red-darken-4" class="switch" label="Use Universal Data License" v-model="useUdl"/>
+                    <v-switch v-if="useUdl" color="red-darken-4" class="switch" label="Derivation with Credit" v-model="useDerivationCredit"/>
+                    <v-switch v-if="useUdl" color="red-darken-4" class="switch" label="Derivation with Indication" v-model="useDerivationIndication"/>
+                    <v-switch v-if="useUdl" color="red-darken-4" class="switch" label="Derivation with License Passthrough" v-model="useDerivationPassthrough"/>
                     <a target="_blank" href="https://arwiki.wiki/#/en/Universal-Data-License-How-to-use-it">
                         What is the Universal Data License?
                     </a>
@@ -44,7 +47,6 @@ import { ArconnectSigner, DataItem, createData, bundleAndSignData } from 'arbund
 import BundleFactory from '~/utils/bundle';
 import DataItemFactory from '~/utils/dataItem';
 import ArweaveWalletSigner from '~/utils/arweaveWalletSigner';
-import { useDefaults } from 'vuetify/lib/framework.mjs';
 
 const arweave = useArweave() // init arweave env
 const wallet = useArconnectProvider() // init wallet
@@ -56,6 +58,9 @@ const gameTitle = ref<string | null>(null)
 const gameDescription = ref<string | null>(null)
 const loading =  ref<boolean>(false)
 const useUdl = ref<boolean>(true)
+const useDerivationCredit = ref<boolean>(false)
+const useDerivationIndication = ref<boolean>(false)
+const useDerivationPassthrough = ref<boolean>(false)
 
 // prep and upload files
 
@@ -156,6 +161,15 @@ const uploadFiles = async () => {
         }
         if (useUdl.value) {
             tx.addTag('License', config.public.UDLTxID)
+        }
+        if (useDerivationCredit.value) {
+            tx.addTag('Derivation', 'Allowed-With-Credit')
+        }
+        if (useDerivationIndication.value) {
+            tx.addTag('Derivation', 'Allowed-With-Indication')
+        }
+        if (useDerivationPassthrough.value) {
+            tx.addTag('Derivation', 'Allowed-With-License-Passthrough')
         }
 
         await arweave.transactions.sign(tx)

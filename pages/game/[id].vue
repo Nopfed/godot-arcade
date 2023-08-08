@@ -3,16 +3,17 @@
         <template v-if="game">
             <v-row>
                 <v-col cols="12">
-                    <h1>{{ game.title }}</h1>
+                    <div class="header title">{{ game.title }}</div>
                     <code>Bundle ID: {{ game.tx.id }}</code>
-                    <p>
+                    <br/>
+                    <code>
                         Made By: 
-                        <NuxtLink :to="`/creator/${game.tx.owner.address}`">
+                    </code>
+                    <NuxtLink :to="`/creator/${game.tx.owner.address}`">
                             {{ game.tx.owner.address }}
-                        </NuxtLink>
-                    </p>
+                    </NuxtLink><br/>
                     <code>Game ID: {{ game.manifestId }}</code>
-                    
+
                 </v-col>
             </v-row>
             <v-row v-if="game.manifestTx">
@@ -30,7 +31,7 @@
             </v-row>
             <v-row >
                 <v-col cols="12">
-                    <v-btn to="../" color="primary">Back to Games</v-btn>
+                    <v-btn to="../" color="primary" class="btn-back text">Back to Games</v-btn>
                 </v-col>
             </v-row>
         </template>
@@ -95,7 +96,71 @@ const {
 
 <style scoped>
 .game-frame {
-    width: 100%;
-    height: 100%;
+    width: 75%;
+    height: 84%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    border: 0.5em solid red;
+}
+
+.header {
+    margin: 30px;
+    padding: 15px;
+    margin-right: auto;
+    color: white;
+    line-height: 40px;
+    letter-spacing: 25px;   
+}
+
+.title {
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 72px;
+    text-shadow: -2px 0 0 #fdff2a,
+        -4px 0 0 #df4a42,
+        2px 0 0 #91fcfe,
+        4px 0 0 #4405fc;
+}
+
+p {
+    font-size: 24px;
+}
+
+.btn-back {
+    display: block;
+    margin: 30px;
+    padding: 10px;
+    margin-right: auto;
+    max-width: 275px;
+    min-height: 45px;
+    font-size: 24px;
+    position: fixed;
+    top: 0;
+    right: 0;
+}
+
+.text {
+    text-shadow: -1px 0 0 #fdff2a,
+        -2px 0 0 #df4a42,
+        1px 0 0 #91fcfe,
+        2px 0 0 #4405fc;
+}
+
+a:link {
+  color: red;
+  text-decoration: none;
+}
+
+a:visited {
+  color: #a09cb0;
+}
+
+a:hover {
+  color: #FFD23F;
+}
+
+a:active {
+  color: #EEEEEE;
 }
 </style>

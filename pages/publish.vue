@@ -2,16 +2,16 @@
     <v-container>
         <v-row>
             <v-col cols="12">
-                <h1>Publish Your Game</h1>
+                <div class="header title">Publish</div>
             </v-col>
         </v-row>
         <v-row>
             <v-col cols="12">
-                <code v-if="walletAddress">
-                    Welcome, {{ walletAddress }}
-                </code>
-                <v-btn v-else @click="connect">
-                    Connect Arconnect Wallet
+                <p class="text" v-if="walletAddress">
+                    Welcome, <code>{{ walletAddress }}</code>
+                </p>
+                <v-btn color="primary" class="btn-connect text" v-else @click="connect">
+                    Connect Wallet
                 </v-btn>
             </v-col>
         </v-row>
@@ -21,18 +21,18 @@
                     <v-text-field hint="My Awesome Godot Game" counter="150" label="Game Title" v-model="gameTitle" />
                     <v-textarea hint="A cool game about cats." counter="300" label="Game Description" v-model="gameDescription"/>
                     <v-file-input label="Game Files" multiple v-model="filesToUpload" />
-                    <v-switch label="Use Universal Data License" v-model="useUdl"/>
+                    <v-switch color="red-darken-4" class="switch" label="Use Universal Data License" v-model="useUdl"/>
                     <a target="_blank" href="https://arwiki.wiki/#/en/Universal-Data-License-How-to-use-it">
                         What is the Universal Data License?
                     </a>
                     <br/><br/>
-                    <v-btn :loading="loading" @click="uploadFiles">Upload Files</v-btn>
+                    <v-btn color="primary" class="btn-upload text" :loading="loading" @click="uploadFiles">Upload</v-btn>
                 </v-form>
             </v-col>
         </v-row>
         <v-row >
             <v-col cols="12">
-                <v-btn to="../" color="primary">Back to Games</v-btn>
+                <v-btn to="../" color="primary" class="btn-back text">Back to Games</v-btn>
             </v-col>
         </v-row>
         
@@ -183,3 +183,87 @@ const connect = async () => {
 }
 
 </script>
+
+<style scoped>
+.header {
+    display: block;
+    margin: 30px;
+    padding: 15px;
+    margin-left: auto;
+    margin-right: auto;
+    color: white;
+    line-height: 40px;
+    letter-spacing: 25px;   
+}
+
+.title {
+    text-transform: uppercase;
+    font-weight: bold;
+    text-align: center;
+    font-size: 72px;
+    text-shadow: -2px 0 0 #fdff2a,
+        -4px 0 0 #df4a42,
+        2px 0 0 #91fcfe,
+        4px 0 0 #4405fc;
+}
+
+p {
+    font-size: 24px;
+}
+.btn-connect {
+    display: block;
+    margin: 30px;
+    padding: 7px;
+    margin-left: auto;
+    margin-right: auto;
+    min-width: 275px;
+    min-height: 45px;
+    font-size: 24px;
+}
+
+.btn-upload {
+    display: block;
+    padding: 7px;
+    margin-right: auto;
+    max-width: 275px;
+    min-height: 45px;
+    font-size: 24px;
+}
+
+.btn-back {
+    display: block;
+    margin: 30px;
+    padding: 10px;
+    margin-right: auto;
+    max-width: 275px;
+    min-height: 45px;
+    font-size: 24px;
+    position: fixed;
+    bottom: 0;
+}
+
+.text {
+    text-shadow: -1px 0 0 #fdff2a,
+        -2px 0 0 #df4a42,
+        1px 0 0 #91fcfe,
+        2px 0 0 #4405fc;
+}
+
+a:link {
+  color: red;
+  text-decoration: none;
+}
+
+a:visited {
+  color: #a09cb0;
+}
+
+a:hover {
+  color: #FFD23F;
+}
+
+a:active {
+  color: #EEEEEE;
+}
+
+</style>

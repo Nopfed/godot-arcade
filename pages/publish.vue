@@ -43,7 +43,7 @@
 </template>
 
 <script setup lang="ts">
-import { ArconnectSigner, DataItem, createData, bundleAndSignData } from 'arbundles';
+import { DataItem } from 'arbundles';
 import BundleFactory from '~/utils/bundle';
 import DataItemFactory from '~/utils/dataItem';
 import ArweaveWalletSigner from '~/utils/arweaveWalletSigner';
@@ -71,8 +71,6 @@ const uploadFiles = async () => {
 
         const dataItems: DataItem[] = []
         const signer = new ArweaveWalletSigner(wallet.publicKey)
-        // const signer = new ArconnectSigner(window.arweaveWallet)
-        // await signer.setPublicKey()
 
         // get data from files that are being uploaded and sign them
 
@@ -81,11 +79,10 @@ const uploadFiles = async () => {
             version: "0.1.0",
             index: {},
             paths: {},
-
-    }
+        }
 
         for (const file of filesToUpload.value) {
-            console.log('file', file.name, file.size, file.type)
+            // console.log('file', file.name, file.size, file.type)
             const data = await readFileAsArrayBufferAsync(file)
             const tags: { name: string, value: string }[] = []
             if (file.type) {
@@ -96,14 +93,8 @@ const uploadFiles = async () => {
                 signer, 
                 tags
             )
-            // const dataItem = createData(new Uint8Array(data), signer, {
-            //     tags:[{
-            //         name: 'Content-Type',
-            //         value: file.type}]
-            // })
-            // await dataItem.sign(signer)
 
-            console.log('ID', dataItem.id)
+            // console.log('ID', dataItem.id)
             dataItems.push(dataItem)
             const filename = encodeURIComponent(file.name)
             if (file.type === 'text/html') {
@@ -112,7 +103,6 @@ const uploadFiles = async () => {
             manifest.paths[filename] = { id: dataItem.id }
         }
 
-        // console.log('First file byte length:', dataFromFiles[0].byteLength)
         const manifestTags = [
             {name: 'Content-Type', value: 'application/x.arweave-manifest+json'},
             {name: 'Type', value: 'game'},
@@ -129,20 +119,13 @@ const uploadFiles = async () => {
             signer, 
             manifestTags    
         )
-        // const manifestDataItem = await createData(
-        //     JSON.stringify(manifest), 
-        //     signer,
-        //     {tags: manifestTags}
-        // )
-        console.log('Manifest ID', manifestDataItem.id)
+
+        // console.log('Manifest ID', manifestDataItem.id)
         dataItems.push(manifestDataItem)
 
         // make bundle
 
         const bundle = BundleFactory.create(dataItems)
-        // const bundle = await bundleAndSignData(dataItems, signer)
-        // const verified = await bundle.verify()
-        // console.log('Bundle verification.', verified)
 
         // make transaction
 
@@ -173,9 +156,9 @@ const uploadFiles = async () => {
         }
 
         await arweave.transactions.sign(tx)
-        console.log('Posting Transaction', tx.id)
+        // console.log('Posting Transaction', tx.id)
         await arweave.transactions.post(tx)
-        console.log('Finished posting.')
+        // console.log('Finished posting.')
 
         navigateTo(`game/${tx.id}`)
 

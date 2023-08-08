@@ -69,13 +69,13 @@ const {
         
         if (!txs[0]) { return null }
         const tx = txs[0]
-        console.log('Tx', tx)
+        // console.log('Tx', tx)
         const title = tx.tags.find(t => t.name === 'Title')?.value || 'Untitled Game'
         const description = tx.tags.find(t => t.name === 'Description')?.value
         const manifestId = tx.tags.find(t => t.name === 'Manifest-ID')?.value
         const license = tx.tags.find(t => t.name === 'License')?.value
         const isUdl = config.public.UDLTxID === license
-        console.log('ManifestId', manifestId)
+        // console.log('ManifestId', manifestId)
         if (!manifestId) {return null}
         const manifestTxs = await ardb.search('transactions')
             .id(manifestId)

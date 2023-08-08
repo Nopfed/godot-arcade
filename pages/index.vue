@@ -41,7 +41,7 @@ const {
         .sort("HEIGHT_DESC")
         .find() as ArdbTransaction[]
 
-    console.log('TXs', txs)
+    // console.log('TXs', txs)
     return txs.map(tx => {
         const title = tx.tags.find(t => t.name === 'Title')?.value || 'Untitled Game'
         return {tx, title}

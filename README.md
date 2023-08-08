@@ -1,63 +1,33 @@
-# Nuxt 3 Minimal Starter
+# Godot Arcade
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Front-end app for publishing, browsing and uploading HTML5 games made in Godot Engine.
 
-## Setup
+https://godot-arcade.g8way.io/
 
-Make sure to install the dependencies:
+## Inspiration
 
-```bash
-# npm
-npm install
+I've been interested in publishing games to Arweave and I also like to make games in my free time, so I thought it would be cool to have a similar platform to itch.io, but hosted on Arweave.
 
-# pnpm
-pnpm install
+## What it does
 
-# yarn
-yarn install
-```
+Allows users to browse, play and upload HTML5 games made in Godot. It uploads all game files with a manifest, and uses the manifest to grab all the files back when playing back the game in the browser.
 
-## Development Server
+## How I built it
 
-Start the development server on `http://localhost:3000`:
+Nuxt webserver with Vuejs for frontend app. Arweavejs and Arconnect for interfacing with arweave and wallet connection.
 
-```bash
-# npm
-npm run dev
+## Challenges I ran into
 
-# pnpm
-pnpm run dev
+Issues with uploading files as a bundle AND trying to do that with Arconnect. A lot of the helpful tools don't natively allow this for some reason
 
-# yarn
-yarn dev
-```
+## Accomplishments that I'm proud of
 
-## Production
+Getting it to work.
 
-Build the application for production:
+## What I learned
 
-```bash
-# npm
-npm run build
+How interfacing with Arweave works, more experience with vue and using vuetify.
 
-# pnpm
-pnpm run build
+## What's next for Godot Arcade
 
-# yarn
-yarn build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm run preview
-
-# yarn
-yarn preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+Add more features, cleanup layout, add ability to show box covers for games, etc. Lots of potential to be added imo.

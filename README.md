@@ -1,6 +1,6 @@
 # Godot Arcade
 
-Front-end app for publishing, browsing and uploading HTML5 games made in Godot Engine.
+Front-end app for publishing, browsing and playing HTML5 games made in Godot Engine.
 
 https://godot-arcade.g8way.io/
 

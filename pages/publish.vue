@@ -67,6 +67,36 @@ const useDerivationPassthrough = ref<boolean>(false)
 const uploadFiles = async () => {
     try {
         if (!wallet.publicKey) {throw new Error('Wallet not connected.')}
+        if (!filesToUpload.value) {throw new Error('Missing files.')}
+        const wasmCheck = /(\.wasm)$/i
+        let wasmBool: boolean = false
+        const htmlCheck = /(\.html)$/i
+        let htmlBool: boolean = false
+        const pckCheck = /(\.pck)$/i
+        let pckBool: boolean = false
+
+        for (const file of filesToUpload.value) {
+            if (wasmCheck.exec(file.name)) {
+                wasmBool = true
+            }
+            if (htmlCheck.exec(file.name)) {
+                htmlBool = true
+            }
+            if (pckCheck.exec(file.name)) {
+                pckBool = true
+            }
+        }
+
+        if (!wasmBool && !htmlBool && !pckBool) {
+            alert("Missing Godot HTML Game files. Please try again with correct files.")
+            pckBool = false
+            htmlBool = false
+            wasmBool = false
+            throw new Error('Missing Godot HTML Game Files.')  
+        }
+        
+        
+        
         loading.value = true
 
         const dataItems: DataItem[] = []
@@ -82,7 +112,7 @@ const uploadFiles = async () => {
         }
 
         for (const file of filesToUpload.value) {
-            // console.log('file', file.name, file.size, file.type)
+            console.log('file', file.name, file.size, file.type)
             const data = await readFileAsArrayBufferAsync(file)
             const tags: { name: string, value: string }[] = []
             if (file.type) {
@@ -94,7 +124,7 @@ const uploadFiles = async () => {
                 tags
             )
 
-            // console.log('ID', dataItem.id)
+            console.log('ID', dataItem.id)
             dataItems.push(dataItem)
             const filename = encodeURIComponent(file.name)
             if (file.type === 'text/html') {
@@ -120,7 +150,7 @@ const uploadFiles = async () => {
             manifestTags    
         )
 
-        // console.log('Manifest ID', manifestDataItem.id)
+        console.log('Manifest ID', manifestDataItem.id)
         dataItems.push(manifestDataItem)
 
         // make bundle
@@ -156,9 +186,9 @@ const uploadFiles = async () => {
         }
 
         await arweave.transactions.sign(tx)
-        // console.log('Posting Transaction', tx.id)
+        console.log('Posting Transaction', tx.id)
         await arweave.transactions.post(tx)
-        // console.log('Finished posting.')
+        console.log('Finished posting.')
 
         navigateTo(`game/${tx.id}`)
 

@@ -10,7 +10,8 @@
                 <p class="text" v-if="walletAddress">
                     Welcome, <code>{{ walletAddress }}</code>
                 </p>
-                <v-btn color="primary" class="btn-connect text" v-else @click="connect">
+                <v-btn color="primary" class="btn-connect text" 
+                v-else @click="connect">
                     Connect Wallet
                 </v-btn>
             </v-col>
@@ -18,24 +19,38 @@
         <v-row v-if="walletAddress">
             <v-col cols="12">
                 <v-form :disabled="loading">
-                    <v-text-field hint="My Awesome Godot Game" counter="150" label="Game Title" v-model="gameTitle" />
-                    <v-textarea hint="A cool game about cats." counter="300" label="Game Description" v-model="gameDescription"/>
-                    <v-file-input label="Game Files" multiple v-model="filesToUpload" />
-                    <v-switch color="red-darken-4" class="switch" label="Use Universal Data License" v-model="useUdl"/>
-                    <v-switch v-if="useUdl" color="red-darken-4" class="switch" label="Derivation with Credit" v-model="useDerivationCredit"/>
-                    <v-switch v-if="useUdl" color="red-darken-4" class="switch" label="Derivation with Indication" v-model="useDerivationIndication"/>
-                    <v-switch v-if="useUdl" color="red-darken-4" class="switch" label="Derivation with License Passthrough" v-model="useDerivationPassthrough"/>
-                    <a target="_blank" href="https://arwiki.wiki/#/en/Universal-Data-License-How-to-use-it">
+                    <v-text-field hint="My Awesome Godot Game" counter="150" 
+                    label="Game Title" v-model="gameTitle" />
+                    <v-textarea hint="A cool game about cats." counter="300" 
+                    label="Game Description" v-model="gameDescription"/>
+                    <v-file-input label="Game Files" multiple 
+                    v-model="filesToUpload" />
+                    <v-switch color="red-darken-4" class="switch" 
+                    label="Use Universal Data License" v-model="useUdl"/>
+                    <v-switch v-if="useUdl" color="red-darken-4" class="switch"
+                    label="Derivation with Credit"
+                    v-model="useDerivationCredit"/>
+                    <v-switch v-if="useUdl" color="red-darken-4" class="switch"
+                    label="Derivation with Indication"
+                    v-model="useDerivationIndication"/>
+                    <v-switch v-if="useUdl" color="red-darken-4" class="switch"
+                    label="Derivation with License Passthrough"
+                    v-model="useDerivationPassthrough"/>
+                    <a target="_blank" 
+                    href="https://arwiki.wiki/#/en/Universal-Data-License-How-to-use-it">
                         What is the Universal Data License?
                     </a>
                     <br/><br/>
-                    <v-btn color="primary" class="btn-upload text" :loading="loading" @click="uploadFiles">Upload</v-btn>
+                    <v-btn color="primary" class="btn-upload text" 
+                    :loading="loading" @click="uploadFiles">Upload</v-btn>
                 </v-form>
             </v-col>
         </v-row>
         <v-row >
             <v-col cols="12">
-                <v-btn to="../" color="primary" class="btn-back text">Back to Games</v-btn>
+                <v-btn to="../" color="primary" class="btn-back text">
+                    Back to Games
+                </v-btn>
             </v-col>
         </v-row>
         
@@ -88,7 +103,9 @@ const uploadFiles = async () => {
         }
 
         if (!wasmBool && !htmlBool && !pckBool) {
-            alert("Missing Godot HTML Game files. Please try again with correct files.")
+            alert(
+            "Missing Godot HTML Game files.Please try again with correct files."
+            )
             pckBool = false
             htmlBool = false
             wasmBool = false
@@ -134,7 +151,10 @@ const uploadFiles = async () => {
         }
 
         const manifestTags = [
-            {name: 'Content-Type', value: 'application/x.arweave-manifest+json'},
+            {
+                name: 'Content-Type',
+                value: 'application/x.arweave-manifest+json'
+            },
             {name: 'Type', value: 'game'},
             {name: 'Engine', value: 'godot'},
         ]
@@ -142,7 +162,9 @@ const uploadFiles = async () => {
             manifestTags.push({name: 'Title', value: gameTitle.value})
         }
         if (gameDescription.value) {
-            manifestTags.push({name: 'Description', value: gameDescription.value})
+            manifestTags.push(
+                {name: 'Description',value: gameDescription.value}
+            )
         }
         const manifestDataItem = await DataItemFactory.create(
             JSON.stringify(manifest), 

@@ -6,8 +6,11 @@
             </v-col>
         </v-row>
         <v-row v-if="data">
-            <v-col class="col" v-for="{tx, title} in data" :key="tx.id" cols="12">
-                <NuxtLink class="gamelink" :to="`/game/${tx.id}`">{{ title }}</NuxtLink>
+            <v-col class="col" v-for="{tx, title} in data" :key="tx.id"
+            cols="12">
+                <NuxtLink class="gamelink" :to="`/game/${tx.id}`">
+                    {{ title }}
+                </NuxtLink>
                 <br/> <br/> <br/>
                 <p class="text">published by:</p>
                 <br/>
@@ -18,7 +21,9 @@
         </v-row>
         <v-row>
             <v-col cols="12">
-                <v-btn class="publish-btn text" color="primary" to="publish">Publish Game</v-btn>
+                <v-btn class="publish-btn text" color="primary" to="publish">
+                    Publish Game
+                </v-btn>
             </v-col>
         </v-row>
     </v-container>
@@ -43,7 +48,10 @@ const {
 
     // console.log('TXs', txs)
     return txs.map(tx => {
-        const title = tx.tags.find(t => t.name === 'Title')?.value || 'Untitled Game'
+        const title = tx.tags.find(
+            t => t.name === 'Title'
+        )?.value || 'Untitled Game'
+        
         return {tx, title}
     })
 })

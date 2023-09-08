@@ -7,14 +7,20 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "arlocal": "npx arlocal --persist --hidelogs --dbpath arlocal.db"
+    "arlocal": "npx arlocal --persist --hidelogs --dbpath arlocal.db",
+    "lint": "eslint ."
   },
   "devDependencies": {
     "@nuxt/devtools": "latest",
     "@types/node": "^18.17.1",
+    "@typescript-eslint/eslint-plugin": "^6.6.0",
+    "@typescript-eslint/parser": "^6.6.0",
     "arlocal": "^1.1.61",
+    "eslint": "^8.49.0",
+    "eslint-plugin-vue": "^9.17.0",
     "nuxt": "^3.6.5",
-    "vite-plugin-node-polyfills": "^0.11.0"
+    "vite-plugin-node-polyfills": "^0.11.0",
+    "vue-eslint-parser": "^9.3.1"
   },
   "dependencies": {
     "@mdi/font": "^7.2.96",

@@ -1,10 +1,10 @@
 <template>
-    <NuxtLayout>
-      <NuxtPage/>
-    </NuxtLayout>
-  </template>
+  <NuxtLayout>
+    <NuxtPage />
+  </NuxtLayout>
+</template>
 <script setup lang="ts">
 useHead({
-title: 'Godot Arcade'
+  title: 'Godot Arcade'
 })
 </script>

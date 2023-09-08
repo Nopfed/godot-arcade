@@ -6,7 +6,7 @@ export const readFileAsArrayBufferAsync = (blob: Blob):
   Promise<ArrayBuffer> => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader()
-    reader.onerror = async (error) => {
+    reader.onerror = (error) => {
       reject(error)
     }
     reader.onload = (evt) => {

@@ -19,7 +19,7 @@
   "dependencies": {
     "@mdi/font": "^7.2.96",
     "arbundles": "^0.9.8",
-    "arconnect": "^0.4.2",
+    "arconnect": "^1.0.3",
     "ardb": "^1.1.10",
     "arweave": "^1.14.4",
     "buffer": "^6.0.3",

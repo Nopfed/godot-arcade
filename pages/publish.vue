@@ -90,27 +90,27 @@ const uploadFiles = async () => {
         const pckCheck = /(\.pck)$/i
         let pckBool: boolean = false
 
-        for (const file of filesToUpload.value) {
-            if (wasmCheck.exec(file.name)) {
-                wasmBool = true
-            }
-            if (htmlCheck.exec(file.name)) {
-                htmlBool = true
-            }
-            if (pckCheck.exec(file.name)) {
-                pckBool = true
-            }
-        }
+        // for (const file of filesToUpload.value) {
+        //     if (wasmCheck.exec(file.name)) {
+        //         wasmBool = true
+        //     }
+        //     if (htmlCheck.exec(file.name)) {
+        //         htmlBool = true
+        //     }
+        //     if (pckCheck.exec(file.name)) {
+        //         pckBool = true
+        //     }
+        // }
 
-        if (!wasmBool && !htmlBool && !pckBool) {
-            alert(
-            "Missing Godot HTML Game files.Please try again with correct files."
-            )
-            pckBool = false
-            htmlBool = false
-            wasmBool = false
-            throw new Error('Missing Godot HTML Game Files.')  
-        }
+        // if (!wasmBool && !htmlBool && !pckBool) {
+        //     alert(
+        //     "Missing Godot HTML Game files.Please try again with correct files."
+        //     )
+        //     pckBool = false
+        //     htmlBool = false
+        //     wasmBool = false
+        //     throw new Error('Missing Godot HTML Game Files.')  
+        // }
         
         
         
@@ -169,7 +169,7 @@ const uploadFiles = async () => {
         const manifestDataItem = await DataItemFactory.create(
             JSON.stringify(manifest), 
             signer, 
-            manifestTags    
+            manifestTags
         )
 
         console.log('Manifest ID', manifestDataItem.id)
@@ -208,9 +208,9 @@ const uploadFiles = async () => {
         }
 
         await arweave.transactions.sign(tx)
-        console.log('Posting Transaction', tx.id)
-        await arweave.transactions.post(tx)
-        console.log('Finished posting.')
+        // console.log('Posting Transaction', tx.id)
+        // await arweave.transactions.post(tx)
+        // console.log('Finished posting.')
 
         navigateTo(`game/${tx.id}`)
 

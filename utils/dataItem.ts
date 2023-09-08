@@ -9,11 +9,20 @@ export default class DataItemFactory {
     signer: Signer,
     tags?: { name: string, value: string }[]
   ): Promise<DataItem> {
-    const dataItem = createData(data, signer, { tags })
+    // const dataItem = createData(data, signer, { tags })
 
-    await signDataItem(dataItem, signer)
+    // await signDataItem(dataItem, signer)
+    console.log('dataitemfactory', data.length, data[0], data[1], data[2], data[3])
+    try {
+      const buffair = await window.arweaveWallet.signDataItem({ data, tags })
+      console.log('dataitemfactory buffair', buffair.byteLength)
+      return new DataItem(Buffer.from(buffair))
+    } catch (error) {
+      console.error('error in dataitemfactory', error)
+      throw error
+    }
 
-    return dataItem
+    // return dataItem
   }
 }
 

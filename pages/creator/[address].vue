@@ -1,55 +1,26 @@
 <template>
-    <v-container>
-        <v-row v-if="data">
-            <v-col cols="12">
-                <div class="header title">{{ data[0].tx.owner.address }}</div>
-            </v-col>
-            <v-col class="col" v-for="{tx, title} in data" :key="tx.id" cols="12">
-                <NuxtLink class="gamelink" :to="`/game/${tx.id}`">{{ title }}</NuxtLink>
-            </v-col>
-        </v-row>
-        <v-row>
-            <v-col cols="12">
-                <v-btn class="publish-btn text" color="primary" to="../..">Back to Arcade</v-btn>
-            </v-col>
-        </v-row>
-    </v-container>
+  <v-container>
+    <v-row v-if="data">
+      <v-col cols="12">
+        <div class="header title">
+          {{ data[0].tx.owner.address }}
+        </div>
+      </v-col>
+      <v-col v-for="{tx, title} in data" :key="tx.id" class="col" cols="12">
+        <NuxtLink class="gamelink" :to="`/game/${tx.id}`">
+          {{ title }}
+        </NuxtLink>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col cols="12">
+        <v-btn class="publish-btn text" color="primary" to="../..">
+          Back to Arcade
+        </v-btn>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
-
-<script setup lang="ts">
-import ArdbTransaction from 'ardb/lib/models/transaction'
-
-const ardb = useArdb()
-const route = useRoute()
-const arweave = useArweave()
-
-const {api: {host, port, protocol}} = arweave.getConfig()
-const gateway = `${protocol}://${host}:${port}`
-
-const {
-    pending, refresh, data
-} = useLazyAsyncData(async () => {
-    try {
-        const txs = await ardb
-            .search('transactions')
-            .tag('Type', 'game-bundle')
-            .tag('Engine', 'godot')
-            .limit(100)
-            .from(route.params.address.toString())
-            .sort("HEIGHT_DESC")
-            .find() as ArdbTransaction[]
-        
-
-        return txs.map(tx => {
-            const title = tx.tags.find(t => t.name === 'Title')?.value || 'Untitled Game'
-            const description = tx.tags.find(t => t.name === 'Description')?.value
-            return {tx, title, description}
-        })
-    } catch (error) {
-        console.error("Error fetching transaction.", error)
-    }
-})
-</script>
 
 <style scoped>
 .header {
@@ -131,3 +102,37 @@ a:active {
   color: #EEEEEE;
 }
 </style>
+
+<script setup lang="ts">
+import ArdbTransaction from 'ardb/lib/models/transaction'
+
+const ardb = useArdb()
+const route = useRoute()
+// const arweave = useArweave()
+// const {api: {host, port, protocol}} = arweave.getConfig()
+// const gateway = `${protocol}://${host}:${port}`
+
+const { data } = useLazyAsyncData(async () => {
+  try {
+    const txs = await ardb
+      .search('transactions')
+      .tag('Type', 'game-bundle')
+      .tag('Engine', 'godot')
+      .limit(100)
+      .from(route.params.address.toString())
+      .sort("HEIGHT_DESC")
+      .find() as ArdbTransaction[]
+        
+
+    return txs.map(tx => {
+      const title = tx
+        .tags
+        .find(t => t.name === 'Title')?.value || 'Untitled Game'
+      const description = tx.tags.find(t => t.name === 'Description')?.value
+      return {tx, title, description}
+    })
+  } catch (error) {
+    console.error("Error fetching transaction.", error)
+  }
+})
+</script>

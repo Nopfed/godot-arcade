@@ -29,7 +29,7 @@ async function getSignatureAndId(
   item: DataItem,
   signer: Signer,
 ): Promise<{ signature: Buffer; id: Buffer }> {
-    // @ts-ignore
+  // @ts-expect-error we know the types are compatible
   const signatureData = await getSignatureData(item)
   const signatureBytes = await signer.sign(signatureData)
   const idBytes = await Arweave.crypto.hash(signatureBytes)

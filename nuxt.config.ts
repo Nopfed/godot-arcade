@@ -2,7 +2,7 @@
 import { nodePolyfills } from 'vite-plugin-node-polyfills'
 
 export default defineNuxtConfig({
-  devtools: { enabled: true },
+  // devtools: { enabled: true },
   ssr: false,
   css: [
     'vuetify/lib/styles/main.sass',

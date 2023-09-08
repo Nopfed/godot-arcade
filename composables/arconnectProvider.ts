@@ -1,8 +1,5 @@
 import { PermissionType } from "arconnect";
-import Arweave from "arweave";
 import { Buffer } from "buffer";
-
-const arweave = useArweave()
 
 const permissions: PermissionType[] = ['ACCESS_ADDRESS', 'SIGN_TRANSACTION',
  "ACCESS_PUBLIC_KEY", "SIGNATURE"]
@@ -10,15 +7,25 @@ const permissions: PermissionType[] = ['ACCESS_ADDRESS', 'SIGN_TRANSACTION',
 class ArconnectWalletProvider {
     address: string | null = null
     publicKey: Buffer | null = null
-    constructor (private customArweave: Arweave) {}
     
     async connect() {
-        await window.arweaveWallet.connect(permissions)
-        this.address = await window.arweaveWallet.getActiveAddress()
-        this.publicKey = Buffer.from(await window.arweaveWallet.getActivePublicKey(), "base64")
+        try {
+            // Try to see if we're already connected
+            this.address = await window.arweaveWallet.getActiveAddress()
+        } catch (error) {}
+
+        if (!this.address) {
+            await window.arweaveWallet.connect(permissions)
+            this.address = await window.arweaveWallet.getActiveAddress()
+        }
+
+        this.publicKey = Buffer.from(
+            await window.arweaveWallet.getActivePublicKey(),
+            "base64"
+        )
         return this.address
     }
 }
 
-const arconnectWalletProvider = new ArconnectWalletProvider(arweave)
+const arconnectWalletProvider = new ArconnectWalletProvider()
 export const useArconnectProvider = () => arconnectWalletProvider

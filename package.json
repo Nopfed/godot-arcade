@@ -6,7 +6,8 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "arlocal": "npx arlocal --persist --hidelogs --dbpath arlocal.db"
   },
   "devDependencies": {
     "@nuxt/devtools": "latest",

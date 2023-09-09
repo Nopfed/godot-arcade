@@ -30,6 +30,7 @@
     "arweave": "^1.14.4",
     "buffer": "^6.0.3",
     "nuxt-custom-headers": "^2.1.0",
+    "postscribe": "^2.0.8",
     "sass": "^1.64.2",
     "vuetify": "^3.3.11"
   }

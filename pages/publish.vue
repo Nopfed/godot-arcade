@@ -172,12 +172,13 @@ const useDerivationCredit = ref<boolean>(false)
 const useDerivationIndication = ref<boolean>(false)
 const useDerivationPassthrough = ref<boolean>(false)
 
-const udlOpts = ref<UDLOptions>({})
+const udlOpts = reactive<UDLOptions>({useUdl: false})
 
-// prep and upload files
+// Prep and upload files
 
 const uploadFiles = async () => {
-  console.log('got call of udlduty black opts:', udlOpts.value)
+
+  console.log('got call of UDLduty black opts:', udlOpts)
   // try {
   //   if (!wallet.publicKey) {throw new Error('Wallet not connected.')}
   //   if (!filesToUpload.value) {throw new Error('Missing files.')}
@@ -320,7 +321,7 @@ const uploadFiles = async () => {
 }
 
 
-// connect to arconnect wallet
+// Connect to arconnect wallet
 
 const connect = async () => {
   try {

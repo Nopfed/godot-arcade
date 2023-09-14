@@ -42,39 +42,9 @@
             label="Game Files" 
             multiple
           />
-          <v-switch
-            v-model="useUdl"
-            color="red-darken-4" 
-            class="switch"
-            label="Use Universal Data License"
-          />
-          <v-switch
-            v-if="useUdl"
-            v-model="useDerivationCredit"
-            color="red-darken-4"
-            class="switch"
-            label="Derivation with Credit"
-          />
-          <v-switch
-            v-if="useUdl"
-            v-model="useDerivationIndication"
-            color="red-darken-4"
-            class="switch"
-            label="Derivation with Indication"
-          />
-          <v-switch
-            v-if="useUdl"
-            v-model="useDerivationPassthrough"
-            color="red-darken-4"
-            class="switch"
-            label="Derivation with License Passthrough"
-          />
-          <a
-            target="_blank" 
-            href="https://arwiki.wiki/#/en/Universal-Data-License-How-to-use-it"
-          >
-            What is the Universal Data License?
-          </a>
+
+          <UDLForm v-model="udlOpts" />
+
           <br><br>
           <v-btn
             color="primary"
@@ -186,6 +156,7 @@ import { DataItem } from 'arbundles';
 import BundleFactory from '~/utils/bundle';
 import DataItemFactory from '~/utils/dataItem';
 import ArweaveWalletSigner from '~/utils/arweaveWalletSigner';
+import { UDLOptions } from '~/utils/udl'
 
 const arweave = useArweave() // init arweave env
 const wallet = useArconnectProvider() // init wallet
@@ -201,148 +172,151 @@ const useDerivationCredit = ref<boolean>(false)
 const useDerivationIndication = ref<boolean>(false)
 const useDerivationPassthrough = ref<boolean>(false)
 
+const udlOpts = ref<UDLOptions>({})
+
 // prep and upload files
 
 const uploadFiles = async () => {
-  try {
-    if (!wallet.publicKey) {throw new Error('Wallet not connected.')}
-    if (!filesToUpload.value) {throw new Error('Missing files.')}
-    const wasmCheck = /(\.wasm)$/i
-    let wasmBool: boolean = false
-    const htmlCheck = /(\.html)$/i
-    let htmlBool: boolean = false
-    const pckCheck = /(\.pck)$/i
-    let pckBool: boolean = false
+  console.log('got call of udlduty black opts:', udlOpts.value)
+  // try {
+  //   if (!wallet.publicKey) {throw new Error('Wallet not connected.')}
+  //   if (!filesToUpload.value) {throw new Error('Missing files.')}
+  //   const wasmCheck = /(\.wasm)$/i
+  //   let wasmBool: boolean = false
+  //   const htmlCheck = /(\.html)$/i
+  //   let htmlBool: boolean = false
+  //   const pckCheck = /(\.pck)$/i
+  //   let pckBool: boolean = false
 
-    for (const file of filesToUpload.value) {
-      if (wasmCheck.exec(file.name)) {
-        wasmBool = true
-      }
-      if (htmlCheck.exec(file.name)) {
-        htmlBool = true
-      }
-      if (pckCheck.exec(file.name)) {
-        pckBool = true
-      }
-    }
+  //   for (const file of filesToUpload.value) {
+  //     if (wasmCheck.exec(file.name)) {
+  //       wasmBool = true
+  //     }
+  //     if (htmlCheck.exec(file.name)) {
+  //       htmlBool = true
+  //     }
+  //     if (pckCheck.exec(file.name)) {
+  //       pckBool = true
+  //     }
+  //   }
 
-    if (!wasmBool && !htmlBool && !pckBool) {
-      alert(
-        "Missing Godot HTML Game files.Please try again with correct files."
-      )
-      pckBool = false
-      htmlBool = false
-      wasmBool = false
-      throw new Error('Missing Godot HTML Game Files.')  
-    }
+  //   if (!wasmBool && !htmlBool && !pckBool) {
+  //     alert(
+  //       "Missing Godot HTML Game files.Please try again with correct files."
+  //     )
+  //     pckBool = false
+  //     htmlBool = false
+  //     wasmBool = false
+  //     throw new Error('Missing Godot HTML Game Files.')  
+  //   }
         
         
         
-    loading.value = true
+  //   loading.value = true
 
-    const dataItems: DataItem[] = []
-    const signer = new ArweaveWalletSigner(wallet.publicKey)
+  //   const dataItems: DataItem[] = []
+  //   const signer = new ArweaveWalletSigner(wallet.publicKey)
 
-    // get data from files that are being uploaded and sign them
+  //   // get data from files that are being uploaded and sign them
 
-    const manifest = {
-      manifest: "arweave/paths",
-      version: "0.1.0",
-      index: {},
-      paths: {},
-    }
+  //   const manifest = {
+  //     manifest: "arweave/paths",
+  //     version: "0.1.0",
+  //     index: {},
+  //     paths: {},
+  //   }
 
-    for (const file of filesToUpload.value) {
-      console.log('file', file.name, file.size, file.type)
-      const data = await readFileAsArrayBufferAsync(file)
-      const tags: { name: string, value: string }[] = []
-      if (file.type) {
-        tags.push({ name: 'Content-Type', value: file.type })
-      }
-      const dataItem = await DataItemFactory.create(
-        new Uint8Array(data),
-        signer, 
-        tags
-      )
+  //   for (const file of filesToUpload.value) {
+  //     console.log('file', file.name, file.size, file.type)
+  //     const data = await readFileAsArrayBufferAsync(file)
+  //     const tags: { name: string, value: string }[] = []
+  //     if (file.type) {
+  //       tags.push({ name: 'Content-Type', value: file.type })
+  //     }
+  //     const dataItem = await DataItemFactory.create(
+  //       new Uint8Array(data),
+  //       signer, 
+  //       tags
+  //     )
 
-      console.log('ID', dataItem.id)
-      dataItems.push(dataItem)
-      const filename = encodeURIComponent(file.name)
-      if (file.type === 'text/html') {
-        manifest.index = { path: filename }
-      }
-      // @ts-expect-error we ain't typing out all that nonsense, dawg
-      manifest.paths[filename] = { id: dataItem.id }
-    }
+  //     console.log('ID', dataItem.id)
+  //     dataItems.push(dataItem)
+  //     const filename = encodeURIComponent(file.name)
+  //     if (file.type === 'text/html') {
+  //       manifest.index = { path: filename }
+  //     }
+  //     // @ts-expect-error we ain't typing out all that nonsense, dawg
+  //     manifest.paths[filename] = { id: dataItem.id }
+  //   }
 
-    const manifestTags = [
-      {
-        name: 'Content-Type',
-        value: 'application/x.arweave-manifest+json'
-      },
-      {name: 'Type', value: 'game'},
-      {name: 'Engine', value: 'godot'},
-    ]
-    if (gameTitle.value) {
-      manifestTags.push({name: 'Title', value: gameTitle.value})
-    }
-    if (gameDescription.value) {
-      manifestTags.push(
-        {name: 'Description',value: gameDescription.value}
-      )
-    }
-    const manifestDataItem = await DataItemFactory.create(
-      JSON.stringify(manifest), 
-      signer, 
-      manifestTags    
-    )
+  //   const manifestTags = [
+  //     {
+  //       name: 'Content-Type',
+  //       value: 'application/x.arweave-manifest+json'
+  //     },
+  //     {name: 'Type', value: 'game'},
+  //     {name: 'Engine', value: 'godot'},
+  //   ]
+  //   if (gameTitle.value) {
+  //     manifestTags.push({name: 'Title', value: gameTitle.value})
+  //   }
+  //   if (gameDescription.value) {
+  //     manifestTags.push(
+  //       {name: 'Description',value: gameDescription.value}
+  //     )
+  //   }
+  //   const manifestDataItem = await DataItemFactory.create(
+  //     JSON.stringify(manifest), 
+  //     signer, 
+  //     manifestTags    
+  //   )
 
-    console.log('Manifest ID', manifestDataItem.id)
-    dataItems.push(manifestDataItem)
+  //   console.log('Manifest ID', manifestDataItem.id)
+  //   dataItems.push(manifestDataItem)
 
-    // make bundle
+  //   // make bundle
 
-    const bundle = BundleFactory.create(dataItems)
+  //   const bundle = BundleFactory.create(dataItems)
 
-    // make transaction
+  //   // make transaction
 
-    const tx = await arweave.createTransaction({ data: bundle.getRaw() })
+  //   const tx = await arweave.createTransaction({ data: bundle.getRaw() })
 
-    tx.addTag('Bundle-Format', 'binary')
-    tx.addTag('Bundle-Version', '2.0.0')
-    tx.addTag('Type', 'game-bundle')
-    tx.addTag('Engine', 'godot')
-    tx.addTag('Manifest-ID', manifestDataItem.id)
-    if (gameTitle.value) {
-      tx.addTag('Title', gameTitle.value)
-    }
-    if (gameDescription.value) {
-      tx.addTag('Description', gameDescription.value)
-    }
-    if (useUdl.value) {
-      tx.addTag('License', config.public.UDLTxID)
-    }
-    if (useDerivationCredit.value) {
-      tx.addTag('Derivation', 'Allowed-With-Credit')
-    }
-    if (useDerivationIndication.value) {
-      tx.addTag('Derivation', 'Allowed-With-Indication')
-    }
-    if (useDerivationPassthrough.value) {
-      tx.addTag('Derivation', 'Allowed-With-License-Passthrough')
-    }
+  //   tx.addTag('Bundle-Format', 'binary')
+  //   tx.addTag('Bundle-Version', '2.0.0')
+  //   tx.addTag('Type', 'game-bundle')
+  //   tx.addTag('Engine', 'godot')
+  //   tx.addTag('Manifest-ID', manifestDataItem.id)
+  //   if (gameTitle.value) {
+  //     tx.addTag('Title', gameTitle.value)
+  //   }
+  //   if (gameDescription.value) {
+  //     tx.addTag('Description', gameDescription.value)
+  //   }
+  //   if (useUdl.value) {
+  //     tx.addTag('License', config.public.UDLTxID)
+  //   }
+  //   if (useDerivationCredit.value) {
+  //     tx.addTag('Derivation', 'Allowed-With-Credit')
+  //   }
+  //   if (useDerivationIndication.value) {
+  //     tx.addTag('Derivation', 'Allowed-With-Indication')
+  //   }
+  //   if (useDerivationPassthrough.value) {
+  //     tx.addTag('Derivation', 'Allowed-With-License-Passthrough')
+  //   }
 
-    await arweave.transactions.sign(tx)
-    console.log('Posting Transaction', tx.id)
-    await arweave.transactions.post(tx)
-    console.log('Finished posting.')
+  //   await arweave.transactions.sign(tx)
+  //   console.log('Posting Transaction', tx.id)
+  //   await arweave.transactions.post(tx)
+  //   console.log('Finished posting.')
 
-    await navigateTo(`game/${tx.id}`)
+  //   await navigateTo(`game/${tx.id}`)
 
-  } catch(error){
-    console.error('Error while uploading.', error)
-  }
-  loading.value = false
+  // } catch(error){
+  //   console.error('Error while uploading.', error)
+  // }
+  // loading.value = false
 }
 
 
